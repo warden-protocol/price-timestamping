@@ -1,92 +1,124 @@
-# Price Timestamping
+# Committing to a historic record for price data with git
 
+We want to publicly commit to a historical record of price data.
 
+We start by keeping track of the relevant price data in a git repository, and making git commits every so often, eg every hour (or every minute etc).
 
-## Getting started
+We regurlarly publish the new commit hash we get from git, eg `6241eeff1c779d53172dcef676aaae5245039fdd`, on relevant blockchains.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+That hash commits us not only to the record state of the data, but also the entire history.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+Here's how we reveal some information we committed to.  Let's assume we kept our data in a directory called `price_data`:
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.qredo.com/data_analytics/price-timestamping.git
-git branch -M master
-git push -uf origin master
+$ ls --all price_data/
+.  ..  .git  data
+$ tree price_data/
+price_data/
+`-- data
+        `-- USD-GBP
+
+2 directories, 3 files
 ```
 
-## Integrate with your tools
+(This step is just to show that `price_data` is a normal git repository.)
 
-- [ ] [Set up project integrations](https://gitlab.qredo.com/data_analytics/price-timestamping/-/settings/integrations)
+Cargo/Rust installation 
 
-## Collaborate with your team
+```
+curl https://sh.rustup.rs -sSf | sh
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+```
 
-## Test and Deploy
+We want to reveal the exchange rate for USD-GPB as of 24 hours ago.
 
-Use the built-in continuous integration in GitLab.
+So let's produce the proof with the following syntax:
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+```
+$ cd root-path-containing-repository/
 
-***
+$ cargo run  --manifest-path <path-to-manifest/Cargo.toml> <path-to-repo/> <proof_output/> <some-commit-hash> <integer-number-commits> <path-to-pricefile/USD-GBP>
+```
+For our exemplary repo:
 
-# Editing this README
+```
+$ cd root-path-containing-repository/
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+$ cargo run  --manifest-path qredo-analytics/git-merkle-ing/Cargo.toml qredo-analytics/ proof_output/ fab308fce5f648b52be0f93a3a3848f79cc4db14 1 git-merkle-ing/price_data/data/USD-GBP
+```
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+The proof is now in `proof_output`.  It happens to be a git repository, too.  A repository that only has exactly what we need to reveal the relevant information, and nothing more.
 
-## Name
-Choose a self-explaining name for your project.
+Here is how you can consume and verify the proof with *off-the-shelf standard git*:
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+```
+$ cd proof_output/
+$ git show 6241eeff1c779d53172dcef676aaae5245039fdd~24:data/binance/USD-GBP
+exchange rate for USD-GBP at 2022-12-14 08:15:09.989070+00:00 is 2.8584
+```
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+The same hash works for multiple timestamps and currency pairs.  Eg for 11 hours in the past of USD-SGD:
+```
+$ git-merkle-ing price_data/ proof_output_2/ 6241eeff1c779d53172dcef676aaae5245039fdd 11 data/binance/USD-SGD
+content: exchange rate for USD-SGD at 2022-12-14 21:15:09.989070+00:00 is 0.35782
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+And verification:
+```
+$ cd proof_output_2/
+$ git show 6241eeff1c779d53172dcef676aaae5245039fdd~11:data/binance/USD-SGD
+exchange rate for USD-GBP at 2022-12-14 21:15:09.989070+00:00 is 1.45
+```
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+For illustration of having just the relevant data only: the proof we just produced only has data to verify the price 11 hours ago.  If we try to use it to verify another price, we get an error:
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+```
+$ cd proof_output_2/
+$ git show 6241eeff1c779d53172dcef676aaae5245039fdd~24:data/binance/USD-GBP
+error: Could not read 42a0ec5eeb6433f0bfd35cacf80e1610cdc81c60
+error: Could not read 42a0ec5eeb6433f0bfd35cacf80e1610cdc81c60
+fatal: invalid object name '6241eeff1c779d53172dcef676aaae5245039fdd~24'.
+```
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+# Example from the kernel
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+Here's an example using the Linux kernel, to show that we can also handle huge repositories:
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+```
+$ git-merkle-ing linux-kernel/ /tmp/proof 041fae9c105ae342a4245cf1e0dc56a23fbb9d3c 23 Documentation/gpu/backlight.rst
+content: =================
+Backlight support
+=================
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+.. kernel-doc:: drivers/video/backlight/backlight.c
+   :doc: overview
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+.. kernel-doc:: include/linux/backlight.h
+   :internal:
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+.. kernel-doc:: drivers/video/backlight/backlight.c
+   :export:
+```
 
-## License
-For open source projects, say how it is licensed.
+```
+$ gtar c /tmp/proof/ | xz | wc -c
+57232
+```
+And verification:
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+```
+$ cd /tmp/proof/
+$ git show 041fae9c105ae342a4245cf1e0dc56a23fbb9d3c~23:Documentation/gpu/backlight.rst
+=================
+Backlight support
+=================
+
+.. kernel-doc:: drivers/video/backlight/backlight.c
+   :doc: overview
+
+.. kernel-doc:: include/linux/backlight.h
+   :internal:
+
+.. kernel-doc:: drivers/video/backlight/backlight.c
+   :export:
+```

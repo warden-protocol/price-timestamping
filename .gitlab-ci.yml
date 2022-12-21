@@ -1,0 +1,11 @@
+stages:
+  - internal_secret_detection
+
+include:
+  - project: 'devops/gitlab-ci-templates'
+    ref: master
+    file: .gitlab-ci.yml
+
+gitleaks:
+  stage: internal_secret_detection
+  allow_failure: false

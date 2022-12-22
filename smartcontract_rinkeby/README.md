@@ -23,3 +23,9 @@ deploy smart contract to goerli test network
 ```console
 truffle migrate --network goerli   
 ```
+
+install solidity compiler to create ABI from smartcontract.sol
+```console
+npm install -g solc
+npm run compile #compile is custom script in package.json
+```

@@ -16,7 +16,7 @@ initialize project (for this repo already done)
 add .env file
 ```console
 echo  PRIVATE_KEY=key_wallet_with_goerli_funds > .env
-echo  INFURA_API_URL=infura_io_url_needed_only_for_deployment >> myfile.txt
+echo  INFURA_API_URL=infura_io_url_needed_only_for_deployment >> .env
 ```
 
 deploy smart contract to goerli test network

@@ -1,7 +1,7 @@
 create
   or replace
     function
-      etl_functions.test_pricedumping_plpy()
+      etl_functions.test_hashdumping_plpy()
         returns 
             text
         as
@@ -17,10 +17,22 @@ create
             account_sender = os.getenv('account_sender')
             account_receiver = os.getenv('account_receiver')
             pkey_sender = os.getenv('pkey_sender')
+            ubuntu_pw = os.getenv('ubuntu_pw')
             
             #node access
             web3 = Web3(Web3.HTTPProvider(infura_url))
             nonce = web3.eth.getTransactionCount(account_sender)
+
+            #get latest git commit tx_hash
+            #last_git_hash= 'last commit: ' + str(Popen('git -C ../../../../../../../../../home/ubuntu/price-timestamping rev-parse HEAD', shell=True, stdout=PIPE).stdout.read())
+            child = pexpect.spawn('su - ubuntu')
+            child.sendline(ubuntu_pw)
+            child.expect('\$')
+            child.sendline('git -C ../../../../../../../../../home/ubuntu/price-timestamping rev-parse HEAD')
+            child.sendline(ubuntu_pw)
+            child.expect('\$')
+            s = str(child.before).replace("\r","").replace("\n","")
+            last_git_hash = s.split('HEAD')[1].split('ubuntu')[0] 
 
             tx = {
                 'nonce': nonce,
@@ -28,7 +40,7 @@ create
                 'value': web3.toWei(0.00001, 'ether'),
                 'gas': 2000000,
                 'gasPrice': web3.toWei('50', 'gwei'),
-                'data': b'mesage to be written'
+                'data': bytes('last commit: '+last_git_hash,'utf8')
             }
             
             #sign tx with pkey

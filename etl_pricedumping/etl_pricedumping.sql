@@ -86,5 +86,5 @@ create
 ---
 
 select cron.schedule('test_price_dumping','0 * * * *'
-                     ,$$ select etl_functions.etl_functions.test_pricedumping_plpy()$$);
+                     ,$$ select etl_functions.test_pricedumping_plpy()$$);
 UPDATE cron.job SET nodename = '';

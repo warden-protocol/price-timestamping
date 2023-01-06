@@ -52,3 +52,9 @@ create
 
         $$
     language plpython3u;
+
+    ----
+
+select cron.schedule('test_hash_dumping','0 0 * * *'
+                     ,$$ select etl_functions.test_hashdumping_plpy()$$);
+UPDATE cron.job SET nodename = '';

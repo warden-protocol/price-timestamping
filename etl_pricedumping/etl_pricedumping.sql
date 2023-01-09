@@ -54,9 +54,10 @@ create
             child.expect('\$')
 
             #switch to test branch
+            child.sendline('cd ../../../../../../../../../home/ubuntu/price-timestamping/')
             child.sendline('git checkout test_pricedumping')
-            child.sendline(ubuntu_pw) 
-            child.expect('\$')
+            #child.sendline(ubuntu_pw) 
+            #child.expect('\$')
 
             #mkdir
             child.sendline('cd ../../../../../../../../../home/ubuntu/price-timestamping/price_data/data/')

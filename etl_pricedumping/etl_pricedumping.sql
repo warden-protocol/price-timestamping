@@ -51,10 +51,12 @@ create
             gitlab_token = os.getenv('gitlab_token')
             child = pexpect.spawn('su - ubuntu')
             child.sendline(ubuntu_pw)
+            child.expect('\$')
 
             #switch to test branch
             child.sendline('git checkout test_pricedumping')
-            #child.sendline(ubuntu_pw) 
+            child.sendline(ubuntu_pw) 
+            child.expect('\$')
 
             #mkdir
             child.sendline('cd ../../../../../../../../../home/ubuntu/price-timestamping/price_data/data/')

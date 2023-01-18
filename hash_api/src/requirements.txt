@@ -1,0 +1,4 @@
+pexpect
+dotenv
+uvicorn
+fastapi

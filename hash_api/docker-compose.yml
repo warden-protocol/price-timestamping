@@ -1,0 +1,10 @@
+version: "3"
+services:
+  flask:
+    restart: always
+    build: 
+      dockerfile: Dockerfile
+    image: hash_api
+    command: python wsgi.py
+    ports:
+      - "6501:6501"

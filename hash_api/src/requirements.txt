@@ -1,4 +1,4 @@
 pexpect
-dotenv
+python-dotenv
 uvicorn
 fastapi

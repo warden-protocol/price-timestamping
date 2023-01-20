@@ -30,6 +30,14 @@ curl https://sh.rustup.rs -sSf | sh
 
 ```
 
+additional dependencies for ubuntu
+
+```
+sudo apt install libssl-dev
+sudo apt install pkg-config
+
+```
+
 We want to reveal the exchange rate for USD-GPB as of 24 hours ago.
 
 So let's produce the proof with the following syntax:

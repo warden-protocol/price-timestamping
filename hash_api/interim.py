@@ -4,6 +4,7 @@ import pexpect
 from dotenv import load_dotenv
 import os
 import json
+import socket
 
 #PROBLEM: USER ETC IS IN HOST NOT DOCKER CONTAINER - HOW TO ACCESS? --> NEED TO GITPULL WITHIN CONTAINER
 
@@ -15,11 +16,14 @@ app = FastAPI()
 #endpoint method
 @app.get('/prices_hour')
 def getprices_hour(target:str='USD',symbol:str='QRDO',ts:str='2023-01-04-14',hash:str='aeb690ac7c9860cdf909c93351c2742298378791'):
-    
-    #load env
-    load_dotenv('.env')
-    gitlab_token = os.getenv('gitlab_token')
 
+    container_id = socket.gethostname() #get docker container id from within
+    print(container_id)
+    os.system('docker exec -it ' + container_id + ' echo "hello world" ')
+    #load env
+    load_dotenv('../.env')
+    gitlab_token = os.getenv('gitlab_token')
+    print(gitlab_token)
     if not os.path.isdir('price-timestamping'):
         os.system('git clone https://oauth2:'+gitlab_token+'@gitlab.qredo.com/data_analytics/price-timestamping.git')
 
@@ -44,3 +48,4 @@ def getprices_hour(target:str='USD',symbol:str='QRDO',ts:str='2023-01-04-14',has
     os.system('yes | rm -r ../proof_output/')
     return Response(json.loads(res),media_type="application/json")
 
+# https://stackoverflow.com/questions/32163955/how-to-run-shell-script-on-host-from-docker-container

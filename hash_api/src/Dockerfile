@@ -3,7 +3,7 @@ FROM ubuntu:20.04
 # avoid stuck build due to user prompt
 ARG DEBIAN_FRONTEND=noninteractive
 
-#install dependencies (python,git,rust)
+#install dependencies (python,git,rust/cargo)
 RUN  apt-get -y update 
 RUN apt-get install -y pkg-config 
 RUN apt-get install -y libssl-dev

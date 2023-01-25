@@ -29,7 +29,7 @@ create
             child = pexpect.spawn('su - ubuntu')
             child.sendline(ubuntu_pw)
             child.expect('\$')
-            child.sendline('git -C price-timestamping/ pull https://oauth2:'+gitlab_token+'@gitlab.qredo.com/data_analytics/price-timestamping.git')
+            child.sendline('git -C ../../../../../../../../../home/ubuntu/price-timestamping/ pull https://oauth2:'+gitlab_token+'@gitlab.qredo.com/data_analytics/price-timestamping.git')
             child.expect('\$')
             child.sendline('git -C ../../../../../../../../../home/ubuntu/price-timestamping rev-parse HEAD')
             child.sendline(ubuntu_pw)

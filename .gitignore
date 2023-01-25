@@ -1,3 +1,6 @@
 target/
 node_modules/
 .env
+*.pyc
+__pycache__/
+proof_output/

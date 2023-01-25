@@ -18,6 +18,7 @@ create
             account_receiver = os.getenv('account_receiver')
             pkey_sender = os.getenv('pkey_sender')
             ubuntu_pw = os.getenv('ubuntu_pw')
+            gitlab_token = os.getenv('gitlab_token')
             
             #node access
             web3 = Web3(Web3.HTTPProvider(infura_url))
@@ -27,6 +28,8 @@ create
             #last_git_hash= 'last commit: ' + str(Popen('git -C ../../../../../../../../../home/ubuntu/price-timestamping rev-parse HEAD', shell=True, stdout=PIPE).stdout.read())
             child = pexpect.spawn('su - ubuntu')
             child.sendline(ubuntu_pw)
+            child.expect('\$')
+            child.sendline('git -C price-timestamping/ pull https://oauth2:'+gitlab_token+'@gitlab.qredo.com/data_analytics/price-timestamping.git')
             child.expect('\$')
             child.sendline('git -C ../../../../../../../../../home/ubuntu/price-timestamping rev-parse HEAD')
             child.sendline(ubuntu_pw)

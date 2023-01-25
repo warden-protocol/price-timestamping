@@ -25,26 +25,29 @@ else:
 app = FastAPI()
 #endpoint method
 @app.get('/prices_hour')
-def getprices_hour(target:str='USD',symbol:str='QRDO',ts:str='2023-01-04-14',hash:str='aeb690ac7c9860cdf909c93351c2742298378791'):
-
+def getprices_hour(target:str='USD',symbol:str='QRDO',ts:str='2023-01-04-14',hash:str='aeb690ac7c9860cdf909c93351c2742298378791',goback_n_commits:str='0'):
+    #clone repo if necessary --> condition should never be met as initialized above already
     if not os.path.isdir('price-timestamping'):
         os.system('git clone https://oauth2:'+gitlab_token+'@gitlab.qredo.com/data_analytics/price-timestamping.git')
 
     # #refresh repo
     os.system('git -C price-timestamping/ pull https://oauth2:'+gitlab_token+'@gitlab.qredo.com/data_analytics/price-timestamping.git')
-
-    # cargo cmds to generate proof output
-    cargo_run = 'cargo run --manifest-path price-timestamping/Cargo.toml price-timestamping/ price-timestamping/proof_output/ '+hash+' 0 '+'price_data/data/'+ts+'/'+symbol+'_'+target+'.json'
-    cargo_output = 'git -C price-timestamping/ show '+hash+'~0:price_data/data/'+ts+'/'+symbol+'_'+target+'.json > ' +os.getcwd()+ '/price-timestamping/proof_output/res'
-    os.system(cargo_run)
-    print('cargo run done')
-    os.system(cargo_output)
-    print('cargo output done')
-    # #read in
-    with open('price-timestamping/proof_output/res') as f:
-        res = f.read().splitlines()
-    res = str(res[0]).replace('prices_json','"prices_json"') #fix later^^
-    res = json.dumps(res, indent=4, default=str)
+    try:
+        # cargo cmds to generate proof output
+        cargo_run = 'cargo run --manifest-path price-timestamping/Cargo.toml price-timestamping/ price-timestamping/proof_output/ '+hash+' 0 '+'price_data/data/'+ts+'/'+symbol+'_'+target+'.json'
+        cargo_output = 'git -C price-timestamping/ show '+hash+'~'+goback_n_commits+':price_data/data/'+ts+'/'+symbol+'_'+target+'.json > ' +os.getcwd()+ '/price-timestamping/proof_output/res'
+        os.system(cargo_run)
+        print('cargo run done')
+        os.system(cargo_output)
+        print('cargo output done')
+        # #read in
+        with open('price-timestamping/proof_output/res') as f:
+            res = f.read().splitlines()
+        res = str(res[0]).replace('prices_json','"prices_json"') #fix later^^
+        res = json.dumps(res, indent=4, default=str)
+    except:
+        res = '{"prices_json": "No data in repository for these input parameters"}'
+        res = json.dumps(res, indent=4, default=str)
     
-    # os.system('yes | rm -r ../proof_output/')
+    # os.system('yes | rm -r price-timestamping/proof_output/')
     return Response(content=res,media_type="application/json")

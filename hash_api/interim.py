@@ -25,7 +25,7 @@ else:
 app = FastAPI()
 #endpoint method
 @app.get('/prices_hour')
-def getprices_hour(target:str='USD',symbol:str='QRDO',ts:str='2023-01-04-14',hash:str='aeb690ac7c9860cdf909c93351c2742298378791',goback_n_commits:str='0'):
+def getprices_hour(target:str='USD',symbol:str='QRDO',ts:str='2023-01-04-14',hash:str='aeb690ac7c9860cdf909c93351c2742298378791'):
     #clone repo if necessary --> condition should never be met as initialized above already
     if not os.path.isdir('price-timestamping'):
         os.system('git clone https://oauth2:'+gitlab_token+'@gitlab.qredo.com/data_analytics/price-timestamping.git')
@@ -35,7 +35,7 @@ def getprices_hour(target:str='USD',symbol:str='QRDO',ts:str='2023-01-04-14',has
     try:
         # cargo cmds to generate proof output
         cargo_run = 'cargo run --manifest-path price-timestamping/Cargo.toml price-timestamping/ price-timestamping/proof_output/ '+hash+' 0 '+'price_data/data/'+ts+'/'+symbol+'_'+target+'.json'
-        cargo_output = 'git -C price-timestamping/ show '+hash+'~'+goback_n_commits+':price_data/data/'+ts+'/'+symbol+'_'+target+'.json > ' +os.getcwd()+ '/price-timestamping/proof_output/res'
+        cargo_output = 'git -C price-timestamping/ show '+hash+'~0:price_data/data/'+ts+'/'+symbol+'_'+target+'.json > ' +os.getcwd()+ '/price-timestamping/proof_output/res'
         os.system(cargo_run)
         print('cargo run done')
         os.system(cargo_output)

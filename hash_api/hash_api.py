@@ -1,44 +1,53 @@
-import pexpect
+from fastapi import FastAPI
+from fastapi import Response
 from dotenv import load_dotenv
 import os
+import json
 
-#define input params
-in_hash = 'aeb690ac7c9860cdf909c93351c2742298378791'
-in_ts = '2023-01-04-14'
-in_symbol= 'QRDO'
-in_target='USD'
+#get env
+load_dotenv('price-timestamping/hash_api/.env')
+gitlab_token = os.getenv('gitlab_token')
+gitlab_email = os.getenv('gitlab_email')
+#add git configuration for docker container
+os.system('git config --global user.email "'+gitlab_email+'"') 
+os.system("git config --global --add safe.directory '*'")
+#add cargo configuration for docker container
+os.system('export CARGO_HTTP_MULTIPLEXING=false')
+#clone repo again in subfolder to avoid git owner issues
+if not os.path.isdir('sub'):
+    os.system('mkdir sub')
+    os.chdir('sub')
+    os.system('git clone https://oauth2:'+gitlab_token+'@gitlab.qredo.com/data_analytics/price-timestamping.git')
+else: 
+    os.chdir('sub')
 
+# #initialize app
+app = FastAPI()
+#endpoint method
+@app.get('/prices_hour')
+def getprices_hour(target:str='USD',symbol:str='QRDO',ts:str='2023-01-04-14',hash:str='aeb690ac7c9860cdf909c93351c2742298378791'):
+    #clone repo if necessary --> condition should never be met as initialized above already
+    if not os.path.isdir('price-timestamping'):
+        os.system('git clone https://oauth2:'+gitlab_token+'@gitlab.qredo.com/data_analytics/price-timestamping.git')
 
-#load env
-load_dotenv('//home/ubuntu/price-timestamping/.env')
-ubuntu_pw = os.getenv('ubuntu_pw')
-#cargo 
-cargo_run = 'cargo run --manifest-path Cargo.toml . proof_output/ '+in_hash+' 0 '+'price_data/data/'+in_ts+'/'+in_symbol+'_'+in_target+'.json'
-cargo_output = 'git show '+in_hash+'~0:price_data/data/'+in_ts+'/'+in_symbol+'_'+in_target+'.json > //home/ubuntu/price-timestamping/proof_output/res'
-
-#switch to ubuntu user
-child = pexpect.spawn('su - ubuntu',encoding='utf-8')
-child.sendline(ubuntu_pw)
-child.expect('\$')
-#run cargo routine
-child.sendline('cd //home/ubuntu/price-timestamping/')
-child.expect('\$')
-child.sendline(cargo_run)
-child.expect('\$')
-child.sendline('cd /proof_output/')
-child.expect('\$')
-child.sendline(cargo_output)
-child.expect('\$')
-#read in
-with open('/home/ubuntu/price-timestamping/proof_output/res') as f:
-    res = f.readlines()
-
-child.sendline('yes | rm -r /home/ubuntu/price-timestamping/proof_output/')
-child.expect('\$')
-#yes | rm -r proof_output
-#rm mylog.txt
-
-#child.sendline('cargo run --manifest-path Cargo.toml . proof_output/ aeb690ac7c9860cdf909c93351c2742298378791 0 price_data/data/2023-01-04-14/QRDO_USD.json')
-
-#cd proof_outpout
-#git show aeb690ac7c9860cdf909c93351c2742298378791~0:price_data/data/2023-01-04-14/QRDO_USD.json
+    # #refresh repo
+    os.system('git -C price-timestamping/ pull https://oauth2:'+gitlab_token+'@gitlab.qredo.com/data_analytics/price-timestamping.git')
+    try:
+        # cargo cmds to generate proof output
+        cargo_run = 'cargo run --manifest-path price-timestamping/Cargo.toml price-timestamping/ price-timestamping/proof_output/ '+hash+' 0 '+'price_data/data/'+ts+'/'+symbol+'_'+target+'.json'
+        cargo_output = 'git -C price-timestamping/ show '+hash+'~0:price_data/data/'+ts+'/'+symbol+'_'+target+'.json > ' +os.getcwd()+ '/price-timestamping/proof_output/res'
+        os.system(cargo_run)
+        print('cargo run done')
+        os.system(cargo_output)
+        print('cargo output done')
+        # #read in
+        with open('price-timestamping/proof_output/res') as f:
+            res = f.read().splitlines()
+        res = str(res[0]).replace('prices_json','"prices_json"') #fix later^^
+        res = json.dumps(res, indent=4, default=str)
+    except:
+        res = '{"prices_json": "No data in repository for these input parameters"}'
+        res = json.dumps(res, indent=4, default=str)
+    
+    # os.system('yes | rm -r price-timestamping/proof_output/')
+    return Response(content=res,media_type="application/json")

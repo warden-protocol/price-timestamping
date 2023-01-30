@@ -55,33 +55,36 @@ create
 
             #switch to test branch
             child.sendline('cd ../../../../../../../../../home/ubuntu/price-timestamping/')
-            child.sendline('git checkout test_pricedumping')
-            #child.sendline(ubuntu_pw) 
-            #child.expect('\$')
+            child.expect('\$')
+            child.sendline('git checkout price-dumping-branch')
+            child.expect('\$')
 
             #mkdir
             child.sendline('cd ../../../../../../../../../home/ubuntu/price-timestamping/price_data/data/')
+            child.expect('\$')
             child.sendline('mkdir "$(date \'+%Y-%m-%d-%H\')"')
+            child.expect('\$')
             child.sendline('cd "$(date \'+%Y-%m-%d-%H\')"')
+            child.expect('\$')
 
             #load current price data
             cpd = plpy.execute("select * from etl_functions.return_recent_prices_as_jsons()")
-            #plpy.notice(len(cpd))
             
             #write to file
             for i in cpd:
               plpy.notice(i)
               child.sendline('echo ' + json.dumps(i) + ' >' + json.loads(i["prices_json"])["symbol"]+'_'+json.loads(i["prices_json"])["target"]+'.json')
-
+              child.expect('\$')
             #commit and push to repo
             child.sendline('cd ../../../../../../../../../home/ubuntu/price-timestamping/')
+            child.expect('\$')
             child.sendline('git add .')
+            child.expect('\$')
             child.sendline('git commit -m "autocommit price data"')
+            child.expect('\$')
             #child.sendline('git push --set-upstream origin master')  
             child.sendline('git push https://oauth2:' + gitlab_token + '@gitlab.qredo.com/data_analytics/price-timestamping.git')
-            child.sendline('git push https://oauth2:' + gitlab_token + '@gitlab.qredo.com/data_analytics/price-timestamping.git')
-            child.expect('\$')
-                 
+            child.expect('\$')                
             return child.before     
           $$
         language plpython3u;

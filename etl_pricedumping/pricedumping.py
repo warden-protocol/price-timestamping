@@ -24,7 +24,7 @@ if not os.path.isdir('sub'):
     print('cloned')
 
 
-if not os.popen('git -C sub/price-timestamping/ rev-parse --verify price-dumping-branch | wc -l').read().splitlines()[0].strip() == '1':
+if not os.popen('git -C sub/price-timestamping/ checkout price-dumping-branch | wc -l').read().splitlines()[0].strip() == '1':
     os.system('git -C sub/price-timestamping/ checkout -b price-dumping-branch')
     print('created & switched to branch')
 else:
@@ -53,7 +53,7 @@ if not os.path.isdir('sub/price-timestamping/price_data/data/'+str(r[0]['price_t
     'value': web3.toWei(0.00001, 'ether'),
     'gas': 2000000,
     'gasPrice': web3.toWei('50', 'gwei'),
-    'data': bytes('proof of commit hash: '+git_hash,'utf8')
+    'data': bytes('commit_hash: '+git_hash,'utf8')
     }
 
     signed_tx = web3.eth.account.sign_transaction(tx, pkey_sender)
@@ -62,7 +62,7 @@ if not os.path.isdir('sub/price-timestamping/price_data/data/'+str(r[0]['price_t
     os.system('mkdir '+'sub/price-timestamping/price_data/proofs/'+str(r[0]['price_ts']))
 
     proof = {
-    "tx_hash": str(tx_hash),
+    "blockchain_tx": 'https://goerli.etherscan.io/tx/'+str(web3.toHex(tx_hash)),
     "commit_hash": str(git_hash)
     }
 

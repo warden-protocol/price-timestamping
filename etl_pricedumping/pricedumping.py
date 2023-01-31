@@ -62,8 +62,11 @@ if not os.path.isdir('sub/price-timestamping/price_data/data/'+str(r[0]['price_t
     os.system('mkdir '+'sub/price-timestamping/price_data/proofs/'+str(r[0]['price_ts']))
 
     proof = {
-    "tx_hash": tx_hash,
-    "commit_hash": git_hash
+    "tx_hash": str(tx_hash),
+    "commit_hash": str(git_hash)
     }
 
     os.system('echo '+json.dumps(proof)+' >'+'sub/price-timestamping/price_data/proofs/'+str(r[0]['price_ts'])+'/'+'proof.json')
+    os.system('git -C sub/price-timestamping/ add .')
+    os.system('git -C sub/price-timestamping/ commit -m "autocommit proof" ')
+    os.system('git -C sub/price-timestamping/ push https://oauth2:' + gitlab_token + '@gitlab.qredo.com/data_analytics/price-timestamping.git')

@@ -31,8 +31,9 @@ else:
     os.system('git -C sub/price-timestamping/ checkout price-dumping-branch')
     print('switched to branch')
 
-r = requests.get('http://data.dev.qredo.loc:5501/prices_hour_all?nlast=1')
+r = requests.get('http://priceapi:5501/prices_hour_all?nlast=1')
 r = json.loads(r.text)
+#print(r)
 
 if not os.path.isdir('sub/price-timestamping/price_data/data/'+str(r[0]['price_ts'])):
     print(r)

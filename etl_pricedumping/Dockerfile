@@ -9,6 +9,7 @@ RUN apt install -y python3.9
 RUN apt install -y python3-pip 
 RUN apt install -y git
 RUN apt-get -y install cron
+RUN apt-get install -y libssl-dev
 
 # Add the script to the Docker Image
 ADD price-timestamping/etl_pricedumping/pricedumping.py /root/pricedumping.py

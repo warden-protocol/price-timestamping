@@ -9,10 +9,9 @@ services:
       dockerfile: price-timestamping/etl_pricedumping/Dockerfile
     image: etl_pricedumping
     command: python3 -u price-timestamping/etl_pricedumping/pricedumping.py
-# volumes:
-#   repo:
-#     driver: local
-#     driver_opts:
-#       o: bind
-#       type: none
-#       device: /home/ubuntu/price-timestamping/
+    container_name: pricedumping
+    networks:
+      - app_gateway
+networks:
+  app_gateway: #same network that priceapi is using
+    external: true

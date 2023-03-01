@@ -4,9 +4,9 @@ FROM ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 #install dependencies (python,git,rust/cargo)
-RUN  apt-get -y update 
-RUN apt install -y python3.9 
-RUN apt install -y python3-pip 
+RUN  apt-get -y update
+RUN apt install -y python3.9
+RUN apt install -y python3-pip
 RUN apt install -y git
 RUN apt-get -y install cron
 RUN apt-get install -y libssl-dev

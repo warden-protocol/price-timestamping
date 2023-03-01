@@ -5,7 +5,7 @@ install Node.js/npm, truffle and other dependencies:
 ```console
 brew install node
 npm i -g truffle
-npm i dotenv 
+npm i dotenv
 npm i @truffle/hdwallet-provider
 ```
 initialize project (for this repo already done)
@@ -21,7 +21,7 @@ echo  INFURA_API_URL=infura_io_url_needed_only_for_deployment >> .env
 
 deploy smart contract to goerli test network
 ```console
-truffle migrate --network goerli   
+truffle migrate --network goerli
 ```
 
 install solidity compiler to create ABI from smartcontract.sol

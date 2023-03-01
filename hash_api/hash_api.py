@@ -9,7 +9,7 @@ load_dotenv('price-timestamping/.env')
 gitlab_token = os.getenv('gitlab_token')
 gitlab_email = os.getenv('gitlab_email')
 #add git configuration for docker container
-os.system('git config --global user.email "'+gitlab_email+'"') 
+os.system('git config --global user.email "'+gitlab_email+'"')
 os.system("git config --global --add safe.directory '*'")
 #add cargo configuration for docker container
 os.system('export CARGO_HTTP_MULTIPLEXING=false')
@@ -18,7 +18,7 @@ if not os.path.isdir('sub'):
     os.system('mkdir sub')
     os.chdir('sub')
     os.system('git clone https://oauth2:'+gitlab_token+'@gitlab.qredo.com/data_analytics/price-timestamping.git')
-else: 
+else:
     os.chdir('sub')
 
 # #initialize app
@@ -45,12 +45,12 @@ def getprices_hour(target:str='USD',symbol:str='QRDO',ts:str='1675166400',hash:s
         # #read in
         with open('price-timestamping/proof_output/res') as f:
             res = f.read().splitlines()
-        res = str(res[0]) 
+        res = str(res[0])
         #res = json.dumps(res, indent=4, default=str)
     except:
         res = '{"prices_json": "No data in repository for these input parameters"}'
         #res = json.dumps(res, indent=4, default=str)
-    
+
     # os.system('yes | rm -r price-timestamping/proof_output/')
     return Response(content=res,media_type="application/json")
 
@@ -78,21 +78,21 @@ def getprices_hour(target:str='USD',symbol:str='QRDO',ts:str='1675166400'):
         # #read in
         with open('price-timestamping/proof_output/res') as f:
             res = f.read().splitlines()
-        data = str(res[0]) 
+        data = str(res[0])
         os.system(cargo_run_proof)
         print('cargo run proof done')
         os.system(cargo_output_proof)
         print('cargo output proof done')
         with open('price-timestamping/proof_output/res') as f:
             res = f.read().splitlines()
-        proof = str(res[0]) 
+        proof = str(res[0])
         res=str({"data":data,"proof":proof})
         #res=json.dumps(res)
         #data = json.dumps(res, indent=4, default=str)
     except:
         res = '{"prices_json": "No data in repository for these input parameters"}'
         #res = json.dumps(res, indent=4, default=str)
-    
+
     # os.system('yes | rm -r price-timestamping/proof_output/')
     return Response(content=res,media_type="application/json")
     #return res

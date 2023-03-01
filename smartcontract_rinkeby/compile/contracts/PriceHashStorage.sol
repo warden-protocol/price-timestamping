@@ -7,7 +7,7 @@ contract PriceHashStorage {
     address private owner;
     uint public totalPriceHashes = 0;
     uint public fee;
-    
+
     struct PriceHash {
         address sender;
         string hash;
@@ -40,7 +40,7 @@ contract PriceHashStorage {
     function setFee(uint _fee) public onlyOwner(){
         fee = _fee; //to change view after contract deployment
     }
-   
+
     function withdraw(uint _amount) public payable onlyOwner {
         payable(owner).transfer(_amount);
     }

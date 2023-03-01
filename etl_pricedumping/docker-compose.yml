@@ -4,7 +4,7 @@ services:
     volumes:
       - "../../price-timestamping:/root/price-timestamping"
     restart: always
-    build: 
+    build:
       context: ../../
       dockerfile: price-timestamping/etl_pricedumping/Dockerfile
     image: etl_pricedumping

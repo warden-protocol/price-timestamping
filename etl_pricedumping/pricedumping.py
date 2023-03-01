@@ -15,7 +15,7 @@ pkey_sender = os.getenv('pkey_sender')
 
 
 #add git configuration for docker container
-os.system('git config --global user.email "'+gitlab_email+'"') 
+os.system('git config --global user.email "'+gitlab_email+'"')
 os.system("git config --global --add safe.directory '*'")
 #clone repo again in subfolder to avoid git owner issues
 if not os.path.isdir('sub'):

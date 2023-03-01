@@ -23,7 +23,7 @@ price_data/
 
 (This step is just to show that `price_data` is a normal git repository.)
 
-Cargo/Rust installation 
+Cargo/Rust installation
 
 ```
 curl https://sh.rustup.rs -sSf | sh

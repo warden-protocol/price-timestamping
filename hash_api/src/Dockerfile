@@ -4,11 +4,11 @@ FROM ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 #install dependencies (python,git,rust/cargo)
-RUN  apt-get -y update 
-RUN apt-get install -y pkg-config 
+RUN  apt-get -y update
+RUN apt-get install -y pkg-config
 RUN apt-get install -y libssl-dev
-RUN apt install -y python3.9 
-RUN apt install -y python3-pip 
+RUN apt install -y python3.9
+RUN apt install -y python3-pip
 RUN apt install -y git
 RUN apt install -y curl
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y

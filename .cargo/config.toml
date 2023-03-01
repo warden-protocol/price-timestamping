@@ -1,0 +1,4 @@
+[http]
+## Disable multiplexing, because we had some problems with it.
+## TODO(Matthias): investigate what happened.
+multiplexing = false         # HTTP/2 multiplexing

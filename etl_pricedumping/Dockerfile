@@ -5,11 +5,11 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 #install dependencies (python,git,rust/cargo)
 RUN apt -y update && apt install -y \
-  python3 \
-  python3-pip \
-  git \
   cron \
-  libssl-dev
+  git \
+  libssl-dev \
+  python3 \
+  python3-pip
 
 # Add the script to the Docker Image
 ADD price-timestamping/etl_pricedumping/pricedumping.py /root/pricedumping.py

@@ -1,6 +1,7 @@
-target/
-node_modules/
-.env
 *.pyc
+.DS_Store
+.env
 __pycache__/
+node_modules/
 proof_output/
+target/

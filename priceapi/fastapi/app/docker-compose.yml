@@ -1,0 +1,19 @@
+version: "3"
+services:
+  flask:
+    restart: always
+    build:
+      #context: ../
+      dockerfile: Dockerfile
+    image: fastapi
+    command: python wsgi.py
+    # command: >
+    #         bash -c
+    #         "export FLASK_APP=priceapi.py && flask run --host=0.0.0.0 --port=5000"
+    ports:
+      - "5501:5501"
+    container_name: priceapi
+    networks:
+      - gateway
+networks:
+  gateway: {}

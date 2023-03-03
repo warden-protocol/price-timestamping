@@ -1,0 +1,4 @@
+app/bin
+app/include
+app/lib
+*.cfg

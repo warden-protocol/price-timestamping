@@ -1,0 +1,6 @@
+SQLAlchemy==1.4.46
+psycopg2
+PyYAML
+pandas
+uvicorn
+fastapi

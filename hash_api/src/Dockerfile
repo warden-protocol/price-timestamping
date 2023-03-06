@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.10
 
 # avoid stuck build due to user prompt
 ARG DEBIAN_FRONTEND=noninteractive

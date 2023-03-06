@@ -9,6 +9,8 @@
 4133dcfd7e523b5b2732c5fb32903e4dec543012:etl_pricedumping/pricedumping.py:password-in-url:37
 4133dcfd7e523b5b2732c5fb32903e4dec543012:etl_pricedumping/pricedumping.py:password-in-url:38
 432247b0bf9a70e45b36c406bb1be3a8df2e36a7:etl_hashdumping/etl_hashdumping.sql:password-in-url:32
+4a83e4189b8bd46454fd55cb0c29bcd1f64c516a:etl_pricedumping/pricedumping.py:password-in-url:21
+4a83e4189b8bd46454fd55cb0c29bcd1f64c516a:priceapi/fastapi/app/priceapi.py:password-in-url:30
 868dfe0401f6a1f59df8dffc26ef6127ebace797:hash_api/interim.py:password-in-url:31
 90adfcae63a4c2bd4e7126479b27e1f06eb36967:etl_pricedumping/pricedumping.py:password-in-url:45
 a0bf644fc64fc9d991f4bbc937efd2bb3d6983a0:etl_pricedumping/pricedumping.py:password-in-url:21

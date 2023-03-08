@@ -7,11 +7,7 @@ from fastapi import Response
 import datetime
 
 #read string file
-with open("./config/config.yaml", "r") as stream:
-    try:
-        strings = yaml.safe_load(stream)
-    except:
-        strings = None
+strings = yaml.safe_load(stream)
 #read config
 config = configparser.ConfigParser()
 config.read('.cfg')

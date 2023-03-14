@@ -2,16 +2,27 @@ version: "3"
 services:
   pricedump:
     volumes:
-      - "../../price-timestamping:/root/price-timestamping"
+      - static-content:/root/static
     restart: always
     build:
       context: ../../
       dockerfile: price-timestamping/etl_pricedumping/Dockerfile
-    image: etl_pricedumping
     command: python3 -u price-timestamping/etl_pricedumping/pricedumping.py
-    container_name: pricedumping
     networks:
       - app_gateway
+  hash_api:
+    volumes:
+      - static-content:/root/static
+    restart: always
+    build:
+      context: ../../
+      dockerfile: price-timestamping/etl_pricedumping/Dockerfile
+    command: python3 -u price-timestamping/etl_pricedumping/wsgi.py
+    ports:
+      - "6501:6501"
+
 networks:
   app_gateway: #same network that priceapi is using
     external: true
+volumes:
+  static-content:

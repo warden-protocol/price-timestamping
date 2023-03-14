@@ -1,0 +1,15 @@
+version: "3"
+services:
+  flask:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+    image: fastapi
+    command: python wsgi.py
+    ports:
+      - "5501:5501"
+    container_name: priceapi
+    networks:
+      - gateway
+networks:
+  gateway: {}

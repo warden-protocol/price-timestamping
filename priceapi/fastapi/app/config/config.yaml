@@ -1,0 +1,90 @@
+queries:
+  prices_hour:
+    all_exchanges: >
+              select
+                id_exchange
+                ,symbol
+                ,target
+                ,round(extract (epoch from price_ts),0)::integer as price_ts
+                ,price
+                ,exchange
+              from
+                mart_priceapi.pricefeed_hour
+              where
+                symbol = '{symbol}'
+                  and
+                target = '{target}'
+                  and
+                price_ts >= to_timestamp({time_from})
+                  and
+                price_ts <= to_timestamp({time_to})
+              order by price_ts desc
+              limit {nlast};
+
+    specific_exchange: >
+              select
+                id_exchange
+                ,symbol
+                ,round(extract (epoch from price_ts),0)::integer as price_ts
+                ,price
+                ,exchange
+              from
+                mart_priceapi.pricefeed_hour
+              where
+                symbol = '{symbol}'
+                  and
+                target = '{target}'
+                  and
+                exchange = '{exchange}'
+                  and
+                price_ts >= to_timestamp({time_from})
+                  and
+                price_ts <= to_timestamp({time_to})
+              order by price_ts desc
+              limit {nlast};
+  prices_hour_all: >
+                select
+                  price_ts
+                  ,symbol
+                  ,target
+                  ,nsources
+                  ,price_median
+                  ,price_stddev
+                  ,price_stddev_normalized
+                from
+                  mart_priceapi.pricefeed_hour_all
+                where
+                  target = '{target}'
+                    and
+                  symbol = '{symbol}'
+                    and
+                    nsources >={min_nsources}
+                    and
+                  price_ts >= to_timestamp({time_from})
+                    and
+                  price_ts <= to_timestamp({time_to})
+                   and
+                  price_stddev_normalized <={max_stddev_normalized}
+                  order by price_ts desc
+                  limit {nlast};
+
+  all_symbols: >
+              select
+                id_exchange
+                ,symbol
+                ,target
+                ,exchange
+              from mart_priceapi.all_symbols
+              order by symbol,target,exchange;
+  tx_volume: >
+            select
+                sum(transaction_usd) as transaction_usd
+            from
+                mart_volumeapi.t_transaction_volume_usd
+            where
+                transaction_unix >= {date_from}
+                and transaction_unix <= {date_to};
+
+
+
+

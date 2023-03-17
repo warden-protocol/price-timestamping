@@ -5,8 +5,8 @@ services:
       - static-content:/root/static
     restart: always
     build:
-      context: ../../
-      dockerfile: price-timestamping/etl_pricedumping/Dockerfile
+      context: ..
+      dockerfile: etl_pricedumping/Dockerfile
     command: python3 -u price-timestamping/etl_pricedumping/pricedumping.py
     networks:
       - app_gateway
@@ -15,8 +15,8 @@ services:
       - static-content:/root/static
     restart: always
     build:
-      context: ../../
-      dockerfile: price-timestamping/etl_pricedumping/Dockerfile
+      context: ..
+      dockerfile: etl_pricedumping/Dockerfile
     command: python3 -u price-timestamping/etl_pricedumping/wsgi.py
     ports:
       - "6501:6501"
@@ -25,8 +25,8 @@ services:
       - static-content:/root/static
     restart: always
     build:
-      context: ../../
-      dockerfile: price-timestamping/etl_pricedumping/Dockerfile
+      context: ..
+      dockerfile: etl_pricedumping/Dockerfile
     command: python3 -u price-timestamping/credit_tracking/tx-watcher.py
 
 networks:

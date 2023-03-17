@@ -23,7 +23,7 @@ def is_git_repo(path):
     except (subprocess.CalledProcessError, OSError):
         # If an error occurs, the path is not a Git repo
         return False
-    
+
 #function to initialize repo
 def git_init(path):
     # Run the "git init" command to initialize a new Git repo

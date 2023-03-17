@@ -1,9 +1,10 @@
-from dotenv import load_dotenv
-import os
 import json
-import requests
-from web3 import Web3
+import os
 import subprocess
+
+import requests
+from dotenv import load_dotenv
+from web3 import Web3
 
 #get env
 load_dotenv('price-timestamping/.env')

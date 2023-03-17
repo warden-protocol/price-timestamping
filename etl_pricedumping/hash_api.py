@@ -6,7 +6,6 @@ import zipfile
 from fastapi import FastAPI, Response
 from fastapi.responses import StreamingResponse
 
-os.system('export CARGO_HTTP_MULTIPLEXING=false')
 
 #def function to zip "proof_output" and return as streaming response
 def zip_subfolder(folder_path):

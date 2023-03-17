@@ -130,3 +130,13 @@ Backlight support
 .. kernel-doc:: drivers/video/backlight/backlight.c
    :export:
 ```
+
+# Running the services in this repo
+
+This is a work in progress.
+
+Amongst other things, you need:
+- `.env` and `priceapi/fastapi/app/.cfg` config files.
+- you need to start `running1.bash` (and leave it running) and then start `running2.bash`
+
+THere might be more steps necessarily.  We will document them as we clean things up.

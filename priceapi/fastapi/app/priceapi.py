@@ -4,7 +4,6 @@ import configparser
 import yaml
 import pandas as pd
 from fastapi import Response
-import datetime
 
 #read string file
 strings = yaml.safe_load(stream)

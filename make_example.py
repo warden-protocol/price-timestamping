@@ -8,7 +8,6 @@ iso8601: 2006-07-03 17:18:43 +0200
 
 
 from git import Repo
-import git
 import math
 
 from datetime import datetime, timedelta, timezone
@@ -16,7 +15,6 @@ import random
 from collections import defaultdict
 
 import pathlib as p
-import tempfile
 
 pairs = ["USD-SGD", "USD-GBP", "GBP-EUR"]
 
@@ -39,7 +37,6 @@ def base_repo(base_dir):
   times = list(make_dates())
   commits = {}
   days = lambda: defaultdict(list)
-  months = defaultdict(days)
 
   for time in times:
     files = list(prep_data(time, work))

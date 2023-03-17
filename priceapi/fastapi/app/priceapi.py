@@ -6,7 +6,8 @@ from fastapi import FastAPI, Response
 from sqlalchemy import create_engine
 
 #read string file
-strings = yaml.safe_load(stream)
+with open("./config/config.yaml", "r") as stream:
+    strings = yaml.safe_load(stream)
 #read config
 config = configparser.ConfigParser()
 config.read('.cfg')

@@ -20,6 +20,14 @@ services:
     command: python3 -u price-timestamping/etl_pricedumping/wsgi.py
     ports:
       - "6501:6501"
+  watcher:
+    volumes:
+      - static-content:/root/static
+    restart: always
+    build:
+      context: ../../
+      dockerfile: price-timestamping/etl_pricedumping/Dockerfile
+    command: python3 -u price-timestamping/credit_tracking/tx-watcher.py
 
 networks:
   app_gateway: #same network that priceapi is using

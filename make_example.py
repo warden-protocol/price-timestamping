@@ -7,14 +7,13 @@ iso8601: 2006-07-03 17:18:43 +0200
 """
 
 
-from git import Repo
 import math
-
-from datetime import datetime, timedelta, timezone
+import pathlib as p
 import random
 from collections import defaultdict
+from datetime import datetime, timedelta, timezone
 
-import pathlib as p
+from git import Repo
 
 pairs = ["USD-SGD", "USD-GBP", "GBP-EUR"]
 

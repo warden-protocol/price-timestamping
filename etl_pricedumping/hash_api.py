@@ -1,10 +1,10 @@
-from fastapi import FastAPI
-from fastapi import Response
-from fastapi.responses import StreamingResponse
-import os
-import json
-import zipfile
 import io
+import json
+import os
+import zipfile
+
+from fastapi import FastAPI, Response
+from fastapi.responses import StreamingResponse
 
 os.system('export CARGO_HTTP_MULTIPLEXING=false')
 

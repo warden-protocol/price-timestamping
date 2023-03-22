@@ -1,11 +1,7 @@
 stages:
-  - internal_secret_detection
+  - pre-scans
 
 include:
-  - project: 'devops/gitlab-ci-templates'
+  - project: security/security-ci-cd-templates
+    file: /qredo-security.gitlab-ci.yml
     ref: master
-    file: .gitlab-ci.yml
-
-gitleaks:
-  stage: internal_secret_detection
-  allow_failure: false

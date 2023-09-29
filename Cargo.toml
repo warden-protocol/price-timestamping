@@ -7,5 +7,5 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4.0.29", features = ["derive"] }
-git2 = "0.15.0"
+git2 = "0.16.1"
 tempdir = "0.3.7"
